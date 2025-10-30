@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track your expenses, manage your budget, and achieve your savings goals with our beautiful and intuitive expense tracker.">
+    <title>MoneyWise - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1 class="logo-text">MoneyWise</h1>
+                    <p class="logo-tagline">Track. Save. Thrive.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" id="themeToggle" title="Toggle theme">
+                        <svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                        <svg class="icon sun-icon" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                    </button>
+                    <button class="btn-primary btn-add-transaction" id="btnAddTransaction">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        <span class="hide-mobile">Add Transaction</span>
+                        <span class="show-mobile">Add</span>
+                    </button>
+                    <div class="profile-dropdown">
+                        <button class="btn-avatar" id="profileBtn">
+                            <div class="avatar">
+                                <span id="userInitials">SJ</span>
+                            </div>
+                        </button>
+                        <div class="dropdown-menu" id="profileMenu">
+                            <div class="dropdown-header">
+                                <p class="user-name" id="userName">Sarah Johnson</p>
+                                <p class="user-email" id="userEmail">sarah.j@example.com</p>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="menuProfile">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                Profile Settings
+                            </a>
+                            <a href="#" class="dropdown-item" id="menuBudget">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+                                </svg>
+                                Budget Settings
+                            </a>
+                            <a href="#" class="dropdown-item" id="menuCurrency">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                </svg>
+                                Regional Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="menuLogout">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                                </svg>
+                                Log out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Motivational Quote -->
+            <div class="quote-card">
+                <svg class="icon sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                <p class="quote-text" id="quoteText">Save money and money will save you</p>
+                <svg class="icon sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-grid">
+                <div class="summary-card balance-card">
+                    <div class="card-icon balance-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><line x1="18" y1="12" x2="18.01" y2="12"/>
+                        </svg>
+                    </div>
+                    <p class="card-label">Total Balance</p>
+                    <p class="card-amount" id="totalBalance">$5,420.50</p>
+                    <p class="card-trend positive">+12.5% from last month</p>
+                </div>
+
+                <div class="summary-card income-card">
+                    <div class="card-icon income-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                    </div>
+                    <p class="card-label">Total Income</p>
+                    <p class="card-amount" id="totalIncome">$8,200.00</p>
+                    <p class="card-trend positive">+8.2% from last month</p>
+                </div>
+
+                <div class="summary-card expense-card">
+                    <div class="card-icon expense-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>
+                        </svg>
+                    </div>
+                    <p class="card-label">Total Expense</p>
+                    <p class="card-amount" id="totalExpense">$2,779.50</p>
+                    <p class="card-trend negative">+3.1% from last month</p>
+                </div>
+            </div>
+
+            <!-- Budget Alert -->
+            <div class="budget-alert" id="budgetAlert" style="display: none;">
+                <div class="alert-icon">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </div>
+                <div class="alert-content">
+                    <p class="alert-title">Budget Alert</p>
+                    <p class="alert-text" id="alertText">You've spent $2,779 of your $3,000 monthly budget (93%)</p>
+                </div>
+                <button class="btn-close-alert" id="closeAlert">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+             <!-- Charts Grid -->
+           <div class="charts-grid">
+    <div class="chart-card">
+        <h3 class="chart-title">Spending by Category</h3>
+        
+        <div class="chart-container"> 
+            <canvas id="pieChart"></canvas>
+        </div>
+
+    </div>
+    <div class="chart-card">
+        <h3 class="chart-title">Income vs Expenses</h3>
+        
+        <div class="chart-container">
+            <canvas id="barChart"></canvas>
+        </div>
+
+    </div>
+</div>
+
+            <!-- Savings Goal -->
+            <div class="savings-card">
+                <div class="savings-header">
+                    <div class="savings-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"/><path d="M16 12l-4-4-4 4M12 16V8"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="savings-title">Vacation Fund</h3>
+                        <p class="savings-amount">$5,420 of $10,000</p>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 54.2%"></div>
+                </div>
+                <p class="savings-percent">54% Complete</p>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="transactions-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Transactions</h2>
+                    <button class="btn-outline-sm">View All</button>
+                </div>
+                <div id="transactionsList"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Transaction Modal -->
+    <div class="modal" id="addTransactionModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Transaction</h2>
+                <button class="btn-close-modal" id="closeModal">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="transactionForm">
+                <div class="form-group">
+                    <div class="btn-group">
+                        <button type="button" class="btn-toggle active" data-type="expense">Expense</button>
+                        <button type="button" class="btn-toggle" data-type="income">Income</button>
+                    </div>
+                    <input type="hidden" name="type" id="transactionType" value="expense">
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" step="0.01" id="amount" name="amount" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="food">Food</option>
+                        <option value="travel">Travel</option>
+                        <option value="shopping">Shopping</option>
+                        <option value="bills">Bills</option>
+                        <option value="savings">Savings</option>
+                        <option value="salary">Salary</option>
+                        <option value="freelance">Freelance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Notes (Optional)</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Add notes..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-outline" id="btnCancelTransaction">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="/moneywise/js/app.js"></script>
+
+</body>
+</html>
+</body>
+</html>

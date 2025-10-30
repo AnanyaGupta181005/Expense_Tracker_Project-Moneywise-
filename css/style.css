@@ -1,0 +1,1331 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Pastel Color Palette */
+    --primary: hsl(15, 85%, 70%);
+    --primary-dark: hsl(15, 85%, 60%);
+    --secondary: hsl(270, 50%, 90%);
+    --accent: hsl(270, 50%, 92%);
+    
+    --income: hsl(160, 55%, 65%);
+    --expense: hsl(15, 85%, 70%);
+    --savings: hsl(200, 70%, 70%);
+    
+    --background: hsl(210, 50%, 98%);
+    --surface: hsl(0, 0%, 100%);
+    --border: hsl(220, 30%, 88%);
+    
+    --text-primary: hsl(240, 20%, 15%);
+    --text-secondary: hsl(240, 15%, 45%);
+    --text-muted: hsl(240, 10%, 60%);
+    
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    
+    --radius: 12px;
+    --radius-lg: 20px;
+    
+    --font-sans: 'Inter', 'DM Sans', system-ui, -apple-system, sans-serif;
+}
+
+.dark {
+    --background: hsl(240, 20%, 10%);
+    --surface: hsl(240, 18%, 14%);
+    --border: hsl(240, 15%, 22%);
+    
+    --text-primary: hsl(210, 40%, 92%);
+    --text-secondary: hsl(210, 20%, 65%);
+    --text-muted: hsl(210, 15%, 50%);
+    
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+body {
+    font-family: var(--font-sans);
+    background: var(--background);
+    color: var(--text-primary);
+    line-height: 1.6;
+    transition: background 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Header */
+.header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.logo-tagline {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.625rem 1.5rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-icon:hover {
+    background: var(--accent);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 0.625rem 1.5rem;
+    border-radius: var(--radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-outline:hover {
+    background: var(--accent);
+}
+
+.btn-outline-sm {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-outline-sm:hover {
+    background: var(--accent);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+/* Icons */
+.icon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+    position: relative;
+}
+
+.btn-avatar {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    min-width: 220px;
+    padding: 0.5rem 0;
+    display: none;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-header {
+    padding: 0.75rem 1rem;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.user-email {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0.5rem 0;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background: var(--accent);
+}
+
+/* Main Content */
+.main-content {
+    padding: 2rem 0;
+}
+
+/* Quote Card */
+.quote-card {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.quote-text {
+    font-style: italic;
+    font-weight: 500;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.sparkle-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--text-secondary);
+}
+
+/* Summary Cards */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.summary-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    transition: all 0.2s;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.balance-card {
+    background: linear-gradient(135deg, hsl(15, 85%, 95%) 0%, hsl(15, 85%, 98%) 100%);
+    border-color: hsl(15, 85%, 85%);
+}
+
+.income-card {
+    background: linear-gradient(135deg, hsl(160, 55%, 95%) 0%, hsl(160, 55%, 98%) 100%);
+    border-color: hsl(160, 55%, 85%);
+}
+
+.expense-card {
+    background: linear-gradient(135deg, hsl(15, 85%, 95%) 0%, hsl(15, 85%, 98%) 100%);
+    border-color: hsl(15, 85%, 85%);
+}
+
+.dark .balance-card,
+.dark .income-card,
+.dark .expense-card {
+    background: var(--surface);
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.balance-icon {
+    background: hsl(15, 85%, 85%);
+    color: hsl(15, 85%, 40%);
+}
+
+.income-icon {
+    background: hsl(160, 55%, 85%);
+    color: hsl(160, 55%, 35%);
+}
+
+.expense-icon {
+    background: hsl(15, 85%, 85%);
+    color: hsl(15, 85%, 40%);
+}
+
+.card-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.card-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.card-trend {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.card-trend.positive {
+    color: var(--income);
+}
+
+.card-trend.negative {
+    color: var(--expense);
+}
+
+/* Budget Alert */
+.budget-alert {
+    background: hsl(0, 75%, 95%);
+    border: 2px solid hsl(0, 75%, 85%);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .budget-alert {
+    background: hsl(0, 50%, 15%);
+    border-color: hsl(0, 50%, 25%);
+}
+
+.alert-icon {
+    background: hsl(0, 75%, 85%);
+    color: hsl(0, 75%, 40%);
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.alert-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.btn-close-alert {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: var(--radius);
+    transition: background 0.2s;
+}
+
+.btn-close-alert:hover {
+    background: hsl(0, 75%, 85%);
+}
+
+/* Charts */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.chart-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Savings Card */
+.savings-card {
+    background: linear-gradient(135deg, hsl(200, 70%, 95%) 0%, hsl(200, 70%, 98%) 100%);
+    border: 2px solid hsl(200, 70%, 85%);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.dark .savings-card {
+    background: var(--surface);
+}
+
+.savings-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.savings-icon {
+    width: 48px;
+    height: 48px;
+    background: hsl(200, 70%, 85%);
+    color: hsl(200, 70%, 35%);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.savings-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.savings-amount {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.progress-bar {
+    background: hsl(200, 70%, 90%);
+    height: 12px;
+    border-radius: 100px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.dark .progress-bar {
+    background: hsl(200, 30%, 20%);
+}
+
+.progress-fill {
+    background: var(--savings);
+    height: 100%;
+    transition: width 0.3s;
+}
+
+.savings-percent {
+    text-align: right;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--savings);
+}
+
+/* Transactions */
+.transactions-section {
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.transaction-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    transition: all 0.2s;
+}
+
+.transaction-card:hover {
+    box-shadow: var(--shadow);
+}
+
+.transaction-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.transaction-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transaction-icon.income {
+    background: hsl(160, 55%, 90%);
+    color: var(--income);
+}
+
+.transaction-icon.expense {
+    background: hsl(15, 85%, 90%);
+    color: var(--expense);
+}
+
+.transaction-details h4 {
+    font-weight: 600;
+    font-size: 0.938rem;
+    text-transform: capitalize;
+}
+
+.transaction-details p {
+    font-size: 0.813rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.transaction-amount {
+    font-weight: 700;
+    font-size: 1.125rem;
+}
+
+.transaction-amount.income {
+    color: var(--income);
+}
+
+.transaction-amount.expense {
+    color: var(--expense);
+}
+
+.transaction-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.btn-close-modal {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: var(--radius);
+    transition: background 0.2s;
+}
+
+.btn-close-modal:hover {
+    background: var(--accent);
+}
+
+.modal form {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    padding-top: 1rem;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 1rem;
+    background: var(--surface);
+    color: var(--text-primary);
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.btn-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.btn-toggle {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    background: transparent;
+    border-radius: var(--radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-toggle.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Auth Page */
+.auth-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, hsl(15, 85%, 98%) 0%, hsl(270, 50%, 98%) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.dark.auth-page {
+    background: linear-gradient(135deg, hsl(240, 20%, 12%) 0%, hsl(270, 20%, 15%) 100%);
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 450px;
+}
+
+.auth-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.sparkle-logo {
+    width: 32px;
+    height: 32px;
+    color: var(--primary);
+}
+
+.auth-tagline {
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+.password-input {
+    position: relative;
+}
+
+.btn-toggle-password {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    padding: 0 0.75rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.link-primary {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link-primary:hover {
+    text-decoration: underline;
+}
+
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+}
+
+.divider span {
+    position: relative;
+    background: var(--surface);
+    padding: 0 1rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.btn-google {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius);
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: all 0.2s;
+}
+
+.btn-google:hover {
+    background: var(--accent);
+}
+
+.google-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.input-hint {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none;
+    }
+    
+    .show-mobile {
+        display: inline;
+    }
+    
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 769px) {
+    .show-mobile {
+        display: none;
+    }
+}
+
+/*
+================================================================
+FIX FOR CHARTS AND SCROLLING
+================================================================
+*/
+
+/* 1. Fix for Charts */
+/* This creates a container that controls the size of the canvas */
+.chart-container {
+    position: relative;
+    width: 100%;
+    /* You can change this height! */
+    height: 300px; 
+}
+
+/* This makes the canvas fill its new container */
+.chart-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 2. Fix for Transaction List Scrolling */
+#transactionsList {
+    /* You can change this height! */
+    max-height: 400px; 
+    overflow-y: auto;  /* This adds the vertical scrollbar when needed */
+    padding-right: 10px; /* Adds a little space for the scrollbar */
+}
+
+/* 3. Helper styles for your transaction items (from your js/app.js) */
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border); /* Assumes you have a --border variable */
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.tx-amount {
+    font-weight: 600;
+}
+
+.tx-amount.income {
+    color: #22c55e; /* Green */
+}
+
+.tx-amount.expense {
+    color: #ef4444; /* Red */
+}
+
+.tx-category {
+    font-weight: 500;
+}
+
+.tx-date {
+    font-size: 0.875rem;
+    color: #6b7280; /* Gray */
+}
+
+.empty-state {
+    padding: 40px 0;
+    text-align: center;
+    color: #6b7280; /* Gray */
+}
+
+/*
+================================================================
+NEW STYLES for Profile Dropdown, Theme Toggle, & Dark Mode
+================================================================
+*/
+
+/* --- Profile Dropdown --- */
+.profile-dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none; /* Hide by default */
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    min-width: 240px;
+    background-color: var(--card-bg, #ffffff);
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    z-index: 100;
+}
+
+/* This class is added by JavaScript to show the menu */
+.dropdown-menu.active {
+    display: block;
+}
+
+/* --- Theme Toggle Icons --- */
+/* Your HTML has one hidden, one shown. This will just hide/show the right one */
+.dark-mode .sun-icon {
+    display: block !important;
+}
+.dark-mode .moon-icon {
+    display: none !important;
+}
+.sun-icon {
+    display: none; /* Hidden by default */
+}
+.moon-icon {
+    display: block; /* Shown by default */
+}
+
+
+/*
+================================================================
+DARK MODE THEME
+================================================================
+*/
+body.dark-mode {
+    --bg-color: #111827; /* Dark Gray */
+    --card-bg: #1F2937; /* Lighter Dark Gray */
+    --text-primary: #F9FAFB; /* Off-white */
+    --text-secondary: #9CA3AF; /* Light Gray */
+    --border: #374151;
+    --input-bg: #374151;
+}
+
+/* Fix chart.js legend text color in dark mode */
+.dark-mode .chart-container {
+    color: #F9FAFB;
+}
+
+/*
+================================================================
+FIX FOR CHART SIZING
+================================================================
+*/
+
+/* This gives the chart wrapper a specific height */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 300px; /* You can change this height! */
+}
+
+/* This makes the canvas fill that wrapper */
+.chart-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Fixes chart.js text color in dark mode */
+body.dark-mode .chart-container {
+    color: #F9FAFB;
+}
+
+/*
+================================================================
+IMPROVED STYLES for Add Transaction Modal (Centered & Aesthetic)
+================================================================
+*/
+
+/* --- Modal Container --- */
+.modal {
+    position: center; /* Cover the whole screen */
+    inset: 0; /* Equivalent to top: 0; right: 0; bottom: 0; left: 0; */
+    z-index: 1000; /* Ensure it's on top */
+
+    /* --- Centering using Flexbox --- */
+    display: flex;
+    align-items: flex-start; /* Vertically center */
+    justify-content: center; /* Horizontally center */
+    /* --- End Centering --- */
+
+    padding: 20px; /* Space from screen edges on small devices */
+
+    /* --- Visibility & Animation --- */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Ignore clicks when hidden */
+    /* Smooth fade-in/out */
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
+}
+
+/* --- Modal Background Overlay --- */
+.modal-overlay {
+    position: center;
+    inset: 0;
+    background-color: rgba(17, 24, 39, 0.6); /* Slightly transparent dark background */
+    -webkit-backdrop-filter: blur(4px); /* Optional: blur background */
+    backdrop-filter: blur(4px); /* Optional: blur background */
+    cursor: pointer;
+}
+/* Dark mode overlay */
+body.dark-mode .modal-overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+
+/* --- Modal Content Box --- */
+.modal-content {
+    position: center; /* Keep on top of overlay */
+    background-color: var(--card-bg);
+    border-radius: 12px; /* Consistent rounded corners */
+    padding: 24px 28px; /* Slightly adjusted padding */
+    width: 100%; /* Responsive width */
+    max-width: 460px; /* Control maximum size */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* Refined shadow */
+    z-index: 1001; /* Above overlay */
+
+    /* Animation: Subtle scale-up entrance */
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Styles when Modal is Active --- */
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Allow interaction */
+    transition-delay: 0s; /* Ensure visibility transition is immediate on show */
+}
+
+.modal.active .modal-content {
+    transform: scale(1) translateY(0); /* Animate to final position */
+}
+
+/* --- Modal Header --- */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; /* Reduced margin */
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+.modal-title {
+    font-size: 1.25rem; /* 20px */
+    font-weight: 600;
+    font-family: var(--font-display);
+    color: var(--text-primary);
+}
+.btn-close-modal {
+    color: var(--text-secondary);
+    padding: 4px; /* Slightly smaller padding */
+}
+.btn-close-modal:hover {
+    color: var(--text-primary);
+    background-color: var(--input-bg);
+}
+.btn-close-modal .icon {
+    width: 20px; /* Smaller close icon */
+    height: 20px;
+}
+
+
+/* --- Modal Form Elements --- */
+#transactionForm .form-group {
+    margin-bottom: 16px; /* Reduced spacing */
+}
+#transactionForm label {
+    font-size: 0.8rem; /* Smaller labels */
+    margin-bottom: 4px;
+}
+#transactionForm input,
+#transactionForm select,
+#transactionForm textarea {
+    padding: 10px 12px; /* Slightly smaller inputs */
+    font-size: 0.95rem;
+}
+
+/* --- Income/Expense Toggle Buttons --- */
+.btn-group {
+    display: flex;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px; /* Add margin below toggle */
+}
+.btn-toggle {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background-color: var(--input-bg);
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    text-align: center;
+}
+.btn-toggle:first-child { border-radius: 7px 0 0 7px; }
+.btn-toggle:last-child { border-radius: 0 7px 7px 0; }
+.btn-toggle.active {
+    background-color: var(--primary);
+    color: var(--primary-text);
+    font-weight: 600;
+}
+body.dark-mode .btn-toggle { background-color: var(--input-bg); color: var(--text-secondary); }
+body.dark-mode .btn-toggle.active { background-color: var(--primary); color: var(--primary-text); }
+
+
+/* --- Modal Footer --- */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+.modal-footer .btn-outline {
+    color: var(--text-secondary);
+    border-color: var(--border);
+    padding: 8px 14px; /* Slightly smaller buttons */
+}
+.modal-footer .btn-outline:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+    background-color: var(--input-bg);
+}
+.modal-footer .btn-primary {
+    padding: 8px 14px; /* Slightly smaller buttons */
+}
+
+/* --- Focus Rings --- */
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3); /* Softer primary focus ring */
+     border-color: var(--primary);
+}
+
+/*
+================================================================
+MINIMAL & ROBUST STYLES for Modal Centering & Visibility
+================================================================
+*/
+
+/* ... Keep all existing CSS above this ... */
+
+/* Find the existing .modal rule and replace it with this */
+.modal {
+    position: fixed; /* Keep it fixed relative to the viewport */
+    inset: 0;        /* Make it cover the entire screen */
+    z-index: 1000;   /* Ensure it's on top of other content */
+
+    /* --- THESE ARE THE KEY CENTERING RULES --- */
+    display: flex;           /* Enable Flexbox */
+    align-items: center;     /* Vertically center the .modal-content */
+    justify-content: center; /* Horizontally center the .modal-content */
+    /* --- End Centering Rules --- */
+
+    padding: 20px; /* Add padding around the edges on small screens */
+
+    /* Keep the visibility/transition rules you already have */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+/* Ensure the .modal-overlay covers the area */
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    cursor: pointer;
+}
+
+/* Ensure .modal-content is positioned correctly within the flex container */
+.modal-content {
+    position: relative; /* Needed so z-index works */
+    z-index: 1001; /* Place content above the overlay */
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 24px 32px;
+    width: 100%;
+    max-width: 500px; /* Limit width */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+
+    /* Keep the animation/visibility rules */
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+}
+
+/* Keep the .modal.active rules as they are */
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.3s ease, visibility 0s linear 0s;
+}
+
+.modal.active .modal-content {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+/* ... Keep all other existing CSS below this ... */
+
