@@ -30,11 +30,37 @@ document.addEventListener("DOMContentLoaded", () => {
     const categorySelect = document.getElementById("category");
     const transactionTypeButtons = document.querySelectorAll(".btn-toggle");
     const transactionTypeInput = document.getElementById("transactionType");
+    // Profile modal selectors
+    const profileSettingsModal = document.getElementById('profileSettingsModal');
+    const closeProfileModalBtn = document.getElementById('closeProfileModal');
+    const btnCancelProfile = document.getElementById('btnCancelProfile');
+    const profileForm = document.getElementById('profileForm');
+    const profileNameInput = document.getElementById('profileName');
+    const profileEmailInput = document.getElementById('profileEmail');
+    const profileDobInput = document.getElementById('profileDob');
+    const profileCountryInput = document.getElementById('profileCountry');
+    const profileLocaleInput = document.getElementById('profileLocale');
+    const btnClearLocaleLocal = document.getElementById('btnClearLocale');
+    // Budget settings modal selectors
+    const budgetSettingsModal = document.getElementById('budgetSettingsModal');
+    const closeBudgetModalBtn = document.getElementById('closeBudgetModal');
+    const btnCancelBudget = document.getElementById('btnCancelBudget');
+    const budgetForm = document.getElementById('budgetForm');
+    const monthlyBudgetInput = document.getElementById('monthlyBudget');
+    const savingsGoalInput = document.getElementById('savingsGoal');
+    const currencyInput = document.getElementById('currency');
 
     // Chart instances
     let pieChartInstance;
     let barChartInstance;
     let allCategories = [];
+    // Current currency (default USD) - will be updated from savings or settings
+    let currentCurrency = 'USD';
+
+    // Currency symbols map
+    const currencySymbols = {
+        'USD': '$', 'EUR': '€', 'GBP': '£', 'INR': '₹', 'CAD': 'CA$', 'AUD': 'A$', 'JPY': '¥', 'CNY': '¥', 'SGD': 'S$'
+    };
 
     // --- MAIN FUNCTION: LOAD ALL DASHBOARD DATA ---
     async function loadDashboard() {
@@ -65,9 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 // 2. Fill Summary Cards
-                if(totalBalanceEl) totalBalanceEl.textContent = formatCurrency(data.summary.balance);
-                if(totalIncomeEl) totalIncomeEl.textContent = formatCurrency(data.summary.total_income);
-                if(totalExpenseEl) totalExpenseEl.textContent = formatCurrency(data.summary.total_expense);
+                if (data.savings && data.savings.currency) currentCurrency = data.savings.currency;
+                if(totalBalanceEl) totalBalanceEl.textContent = formatCurrency(data.summary.balance, currentCurrency);
+                if(totalIncomeEl) totalIncomeEl.textContent = formatCurrency(data.summary.total_income, currentCurrency);
+                if(totalExpenseEl) totalExpenseEl.textContent = formatCurrency(data.summary.total_expense, currentCurrency);
 
                 // 3. Fill Recent Transactions list
                 renderRecentTransactions(data.recent_transactions);
@@ -77,6 +104,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 // 5. Render Bar Chart
                 if(barChartCanvas) renderBarChart(data.bar_chart_data);
+
+                // 6. Render Savings Goal (if returned by API)
+                if (data.savings) {
+                    const saved = parseFloat(data.savings.saved) || 0;
+                    const goal = parseFloat(data.savings.goal) || 0;
+                    const currency = data.savings.currency || 'USD';
+                    const percent = goal > 0 ? Math.round((saved / goal) * 100) : 0;
+
+                    const savingsAmountEl = document.querySelector('.savings-amount');
+                    const progressFillEl = document.querySelector('.progress-fill');
+                    const savingsPercentEl = document.querySelector('.savings-percent');
+
+                    if (savingsAmountEl) savingsAmountEl.textContent = `${formatCurrency(saved, currentCurrency)} of ${formatCurrency(goal, currentCurrency)}`;
+                    if (progressFillEl) progressFillEl.style.width = Math.min(100, Math.max(0, percent)) + '%';
+                    if (savingsPercentEl) savingsPercentEl.textContent = `${Math.min(100, Math.max(0, percent))}% Complete`;
+                }
 
             } else {
                 console.error("Error loading data: " + result.message);
@@ -113,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p class="tx-date">${escapeHtml(tx.date)}</p>
                 </div>
                 <div class="tx-amount ${typeClass}">
-                    ${sign}${formatCurrency(tx.amount)}
+                    ${sign}${formatCurrency(tx.amount, currentCurrency)}
                 </div>
                 <button class="btn-delete-tx" data-id="${tx.id}">
                     <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
@@ -124,76 +167,107 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- CHART: PIE ---
-    function renderPieChart(breakdown) {
-        if (!pieChartCanvas) return; // Exit if canvas not found
-        const labels = breakdown.map(item => item.category);
-        const data = breakdown.map(item => item.total);
-        const pastelColors = ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#E0BBE4'];
+function renderPieChart(breakdown) {
+    if (!pieChartCanvas) return; // Exit if canvas not found
 
-        if (pieChartInstance) pieChartInstance.destroy(); // Clear old chart
+    // --- NEW ROBUST SOLUTION ---
+    // Manually check if the body has the dark-mode class
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    
+    // Set colors directly instead of reading CSS variables
+    const chartTextColor = isDarkMode ? '#F9FAFB' : '#111827'; // Dark text, Light text (black)
+    const cardBgColor = isDarkMode ? '#1F2937' : '#FFFFFF';   // Dark card, Light card (white)
+    const emptyStateColor = isDarkMode ? '#374151' : '#E5E7EB'; // Dark input, Light gray
+    // --- END NEW SOLUTION ---
 
-        pieChartInstance = new Chart(pieChartCanvas.getContext("2d"), {
-            type: 'doughnut',
-            data: {
-                labels: labels.length > 0 ? labels : ['No Expenses'],
-                datasets: [{
-                    data: data.length > 0 ? data : [1],
-                    backgroundColor: data.length > 0 ? pastelColors : ['var(--input-bg)'], // Use CSS var for empty state
-                    borderColor: 'var(--card-bg)', // Match card bg
-                    borderWidth: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { 
-                    legend: { 
-                        position: 'bottom', 
-                        display: data.length > 0,
-                        labels: { color: 'var(--text-secondary)' }
-                    },
-                    tooltip: {
-                        enabled: data.length > 0
+    const labels = breakdown.map(item => item.category);
+    const data = breakdown.map(item => item.total);
+    const pastelColors = ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#E0BBE4'];
+
+    if (pieChartInstance) pieChartInstance.destroy(); // Clear old chart
+
+    pieChartInstance = new Chart(pieChartCanvas.getContext("2d"), {
+        type: 'doughnut',
+        data: {
+            labels: labels.length > 0 ? labels : ['No Expenses'],
+            datasets: [{
+                data: data.length > 0 ? data : [1],
+                backgroundColor: data.length > 0 ? pastelColors : [emptyStateColor], // <-- UPDATED
+                borderColor: cardBgColor, // <-- UPDATED
+                borderWidth: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    display: data.length > 0,
+                    labels: {
+                        color: chartTextColor // <-- UPDATED
                     }
+                },
+                tooltip: {
+                    enabled: data.length > 0
                 }
             }
-        });
-    }
+        }
+    });
+}
 
     // --- CHART: BAR ---
-    function renderBarChart(data) {
-        if (!barChartCanvas) return; // Exit if canvas not found
-        const labels = data.map(item => new Date(item.month + '-02').toLocaleString('default', { month: 'short' })); // Add day to avoid timezone issues
-        const incomeData = data.map(item => item.income);
-        const expenseData = data.map(item => item.expense);
+function renderBarChart(data) {
+    if (!barChartCanvas) return; // Exit if canvas not found
 
-        if (barChartInstance) barChartInstance.destroy(); // Clear old chart
+    // --- NEW ROBUST SOLUTION ---
+    // Manually check if the body has the dark-mode class
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    
+    // Set colors directly
+    const chartTextColor = isDarkMode ? '#F9FAFB' : '#111827'; // Dark text, Light text
+    const gridColor = isDarkMode ? '#374151' : '#E5E7EB';    // Dark border, Light border
+    // --- END NEW SOLUTION ---
 
-        barChartInstance = new Chart(barChartCanvas.getContext("2d"), {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: 'Income', data: incomeData, backgroundColor: 'rgba(186, 255, 201, 0.7)' }, // Use RGBA for transparency
-                    { label: 'Expense', data: expenseData, backgroundColor: 'rgba(255, 179, 186, 0.7)' }
-                ]
+    const labels = data.map(item => new Date(item.month + '-02').toLocaleString('default', { month: 'short' }));
+    const incomeData = data.map(item => item.income);
+    const expenseData = data.map(item => item.expense);
+
+    if (barChartInstance) barChartInstance.destroy(); // Clear old chart
+
+    barChartInstance = new Chart(barChartCanvas.getContext("2d"), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                { label: 'Income', data: incomeData, backgroundColor: 'rgba(186, 255, 201, 0.7)' },
+                { label: 'Expense', data: expenseData, backgroundColor: 'rgba(255, 179, 186, 0.7)' }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: chartTextColor // <-- UPDATED
+                    }
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { 
-                    legend: { 
-                        position: 'bottom',
-                        labels: { color: 'var(--text-secondary)' }
-                    } 
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: chartTextColor } // <-- UPDATED
                 },
-                scales: { 
-                    x: { grid: { display: false }, ticks: { color: 'var(--text-secondary)' } }, 
-                    y: { grid: { color: 'var(--border)' }, ticks: { color: 'var(--text-secondary)' } } 
+                y: {
+                    grid: { color: gridColor }, // <-- UPDATED
+                    ticks: { color: chartTextColor } // <-- UPDATED
                 }
             }
-        });
-    }
+        }
+    });
+}
 
     // --- LOAD CATEGORIES FOR MODAL ---
     async function loadCategories() {
@@ -244,6 +318,156 @@ document.addEventListener("DOMContentLoaded", () => {
         if(expenseBtn) expenseBtn.classList.add('active');
         if(incomeBtn) incomeBtn.classList.remove('active');
         if(transactionTypeInput) transactionTypeInput.value = 'expense';
+    }
+
+    // --- BUDGET MODAL: OPEN/CLOSE ---
+    function openBudgetModal() {
+        if (budgetSettingsModal) budgetSettingsModal.classList.add('active');
+        // Load current settings
+        loadBudgetSettings();
+    }
+    function closeBudgetModal() {
+        if (budgetSettingsModal) budgetSettingsModal.classList.remove('active');
+        if (budgetForm) budgetForm.reset();
+    }
+
+    // --- PROFILE MODAL: OPEN/CLOSE ---
+    function openProfileModal() {
+        if (profileSettingsModal) profileSettingsModal.classList.add('active');
+        loadProfile();
+    }
+    function closeProfileModal() {
+        if (profileSettingsModal) profileSettingsModal.classList.remove('active');
+        if (profileForm) profileForm.reset();
+    }
+
+    // Load profile data
+    async function loadProfile() {
+        try {
+            const res = await fetch('/moneywise/api/profile.php');
+            if (!res.ok) throw new Error('Network response failed');
+            const result = await res.json();
+            if (result.status === 'success' && result.data) {
+                const d = result.data;
+                if (profileNameInput) profileNameInput.value = d.name || '';
+                if (profileEmailInput) profileEmailInput.value = d.email || '';
+                if (profileDobInput) profileDobInput.value = d.dob || '';
+                // Some databases store country as full name or code — try both
+                if (profileCountryInput) {
+                    // Try to set the select value; if not present, append an option
+                    const val = d.country || '';
+                    if (val) {
+                        let opt = profileCountryInput.querySelector(`option[value="${val}"]`);
+                        if (!opt) {
+                            // If backend provided full country name instead of code, try to find by text
+                            opt = Array.from(profileCountryInput.options).find(o => o.text === val);
+                        }
+                        if (opt) {
+                            profileCountryInput.value = opt.value;
+                        } else {
+                            // Append a custom option so the value is visible
+                            const newOpt = document.createElement('option');
+                            newOpt.value = val; newOpt.text = val; newOpt.selected = true;
+                            profileCountryInput.appendChild(newOpt);
+                            profileCountryInput.value = val;
+                        }
+                    } else {
+                        profileCountryInput.value = '';
+                    }
+                }
+                if (profileLocaleInput) profileLocaleInput.value = d.locale || '';
+                // Avatar feature removed; header shows initials only
+                const avatarEl = document.querySelector('.avatar');
+                if (avatarEl && d.name) {
+                    const parts = d.name.split(' ');
+                    const initials = (parts[0] ? parts[0][0] : '') + (parts[1] ? parts[1][0] : '');
+                    avatarEl.style.backgroundImage = '';
+                    avatarEl.textContent = initials.toUpperCase();
+                }
+            }
+        } catch (err) { console.error('Load profile error', err); }
+    }
+
+    // Handle profile submit
+    async function handleProfileSubmit(e) {
+        e.preventDefault();
+        const payload = {
+            name: profileNameInput.value,
+            email: profileEmailInput.value,
+            dob: profileDobInput.value,
+            country: profileCountryInput.value,
+            locale: profileLocaleInput.value
+        };
+        try {
+            const response = await fetch('/moneywise/api/profile.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            if (result.status === 'success') {
+                closeProfileModal();
+                // Update UI name/email
+                if (userNameEl) userNameEl.textContent = payload.name;
+                if (userEmailEl) userEmailEl.textContent = payload.email;
+            } else {
+                alert('Error saving profile: ' + (result.message || 'unknown'));
+            }
+        } catch (err) { console.error('Save profile error', err); alert('An error occurred while saving.'); }
+    }
+
+    // Clear locale button handler (clears the field locally)
+    if (btnClearLocaleLocal) {
+        btnClearLocaleLocal.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (profileLocaleInput) profileLocaleInput.value = '';
+        });
+    }
+
+    // Load current budget settings from API
+    async function loadBudgetSettings() {
+        try {
+            const response = await fetch('/moneywise/api/budget-settings.php');
+            if (!response.ok) throw new Error('Network response failed');
+            const result = await response.json();
+            if (result.status === 'success' && result.data) {
+                const d = result.data;
+                if (monthlyBudgetInput) monthlyBudgetInput.value = d.monthly_budget ?? '';
+                if (savingsGoalInput) savingsGoalInput.value = d.savings_goal ?? '';
+                if (currencyInput) currencyInput.value = d.currency ?? 'USD';
+            } else {
+                console.error('Error loading budget settings', result.message);
+            }
+        } catch (err) {
+            console.error('Fetch budget settings error', err);
+        }
+    }
+
+    // Handle budget form submission (save)
+    async function handleBudgetSubmit(e) {
+        e.preventDefault();
+        const payload = {
+            monthly_budget: parseFloat(monthlyBudgetInput.value || 0),
+            savings_goal: parseFloat(savingsGoalInput.value || 0),
+            currency: (currencyInput.value || 'USD').toUpperCase().slice(0,3)
+        };
+        try {
+            const response = await fetch('/moneywise/api/budget-settings.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            if (result.status === 'success') {
+                closeBudgetModal();
+                loadDashboard(); // Refresh UI (savings card + alerts)
+            } else {
+                alert('Error saving budget settings: ' + (result.message || 'unknown'));
+            }
+        } catch (err) {
+            console.error('Save budget error', err);
+            alert('An error occurred while saving.');
+        }
     }
 
     // --- MODAL: HANDLE SUBMIT ---
@@ -353,17 +577,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- HELPER: Format Currency ---
-    function formatCurrency(num) {
+    function formatCurrency(num, currency = 'USD') {
         // Use Intl.NumberFormat for proper currency formatting, but remove the $
         // Handles potential null or undefined values gracefully
         const number = parseFloat(num);
         if (isNaN(number)) {
             return '0.00'; // Or some other placeholder
         }
-        return new Intl.NumberFormat('en-US', { 
-            minimumFractionDigits: 2, 
-            maximumFractionDigits: 2 
-        }).format(number);
+        const symbol = currencySymbols[currency] || '';
+        // Use Intl for grouping/separators
+        const formatted = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(number);
+        return symbol ? `${symbol}${formatted}` : `${formatted} ${currency}`;
     }
 
     // --- HELPER: Escape HTML ---
@@ -384,13 +608,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnAddTransaction) btnAddTransaction.addEventListener("click", openModal);
     if (btnCloseModal) btnCloseModal.addEventListener("click", closeModal);
     if (btnCancelTransaction) btnCancelTransaction.addEventListener("click", closeModal);
-    // Also close modal if overlay is clicked
-    const modalOverlay = document.getElementById('modalOverlay');
-    if(modalOverlay) modalOverlay.addEventListener('click', closeModal);
+    // Also close modal if overlay is clicked (select by class used in HTML)
+    const modalOverlay = document.querySelector('.modal-overlay');
+    if (modalOverlay) modalOverlay.addEventListener('click', closeModal);
 
     if (transactionForm) transactionForm.addEventListener("submit", handleTransactionSubmit);
+    if (budgetForm) budgetForm.addEventListener('submit', handleBudgetSubmit);
     if (recentTransactionsList) recentTransactionsList.addEventListener('click', handleDeleteTransaction);
     if (profileButton) profileButton.addEventListener("click", toggleProfileMenu);
+    // Open budget modal from profile menu
+    const menuBudget = document.getElementById('menuBudget');
+    if (menuBudget) menuBudget.addEventListener('click', (e) => { e.preventDefault(); toggleProfileMenu(); openBudgetModal(); });
+    // Open profile modal from profile menu
+    const menuProfile = document.getElementById('menuProfile');
+    if (menuProfile) menuProfile.addEventListener('click', (e) => { e.preventDefault(); toggleProfileMenu(); openProfileModal(); });
     if (themeToggleButton) themeToggleButton.addEventListener("click", toggleTheme);
     
     // Close profile menu if clicking outside
@@ -401,6 +632,23 @@ document.addEventListener("DOMContentLoaded", () => {
             profileMenu.classList.remove('active');
         }
     });
+
+    // Budget modal close listeners
+    if (closeBudgetModalBtn) closeBudgetModalBtn.addEventListener('click', closeBudgetModal);
+    if (btnCancelBudget) btnCancelBudget.addEventListener('click', closeBudgetModal);
+    // Also close budget modal when its overlay is clicked
+    const budgetOverlay = budgetSettingsModal ? budgetSettingsModal.querySelector('.modal-overlay') : null;
+    if (budgetOverlay) budgetOverlay.addEventListener('click', closeBudgetModal);
+
+    // Profile modal close listeners
+    if (closeProfileModalBtn) closeProfileModalBtn.addEventListener('click', closeProfileModal);
+    if (btnCancelProfile) btnCancelProfile.addEventListener('click', closeProfileModal);
+    const profileOverlay = profileSettingsModal ? profileSettingsModal.querySelector('.modal-overlay') : null;
+    if (profileOverlay) profileOverlay.addEventListener('click', closeProfileModal);
+
+    if (profileForm) profileForm.addEventListener('submit', handleProfileSubmit);
+
+    // Avatar feature removed
 
     // Toggle for Income/Expense buttons in modal
     if(transactionTypeButtons && transactionTypeInput && categorySelect) {

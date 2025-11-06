@@ -613,76 +613,10 @@ body {
     gap: 0.5rem;
 }
 
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-}
-
-.modal.show {
-    display: block;
-}
-
-.modal-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-}
-
-.modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    max-width: 500px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-lg);
-}
-
-.modal-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.modal-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.btn-close-modal {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: var(--text-secondary);
-    padding: 0.5rem;
-    border-radius: var(--radius);
-    transition: background 0.2s;
-}
-
-.btn-close-modal:hover {
-    background: var(--accent);
-}
-
-.modal form {
-    padding: 1.5rem;
-}
-
-.modal-footer {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-    padding-top: 1rem;
-}
+/* Modal styles are defined later in the file under "FINAL MODAL STYLES".
+   Removed this duplicate block to avoid conflicting rules that could
+   cause the modal to render incorrectly (e.g. positioned at the
+   corner or being cut off). */
 
 /* Forms */
 .form-group {
@@ -694,6 +628,7 @@ body {
     font-weight: 500;
     margin-bottom: 0.5rem;
     font-size: 0.875rem;
+    color: #000000;
 }
 
 .form-group input,
@@ -706,7 +641,7 @@ body {
     font-family: inherit;
     font-size: 1rem;
     background: var(--surface);
-    color: var(--text-primary);
+    color: #000000;
     transition: border-color 0.2s;
 }
 
@@ -1039,21 +974,79 @@ NEW STYLES for Profile Dropdown, Theme Toggle, & Dark Mode
 
 /*
 ================================================================
-DARK MODE THEME
+DARK MODE THEME (COMPLETE AND FINAL)
 ================================================================
 */
+
+/* * 1. DEFINE variables and APPLY them to the body.
+ * This is the main block that defines all colors.
+*/
 body.dark-mode {
-    --bg-color: #111827; /* Dark Gray */
-    --card-bg: #1F2937; /* Lighter Dark Gray */
-    --text-primary: #F9FAFB; /* Off-white */
-    --text-secondary: #9CA3AF; /* Light Gray */
+    /* --- Variable Definitions --- */
+    --bg-color: #111827;
+    --card-bg: #1F2937;
+    --text-primary: #111112;
+    --text-secondary: #242931;
     --border: #374151;
     --input-bg: #374151;
+
+    /* --- Apply to Body Element --- */
+    background-color: var(--bg-color);
+    color: var(--text-primary);
 }
 
-/* Fix chart.js legend text color in dark mode */
+/* * 2. APPLY variables to all other elements.
+ * These rules use the variables defined above.
+*/
+
+/* --- Fix chart.js legend --- */
 .dark-mode .chart-container {
-    color: #F9FAFB;
+    color: #f9fafb;
+}
+
+/* --- Cards & Modals --- */
+.dark-mode .summary-card,
+.dark-mode .quote-card,
+.dark-mode .chart-card,
+.dark-mode .savings-card,
+.dark-mode .transactions-section,
+.dark-mode .modal-content,
+.dark-mode .dropdown-menu {
+    background-color: var(--card-bg);
+    border-color: var(--border);
+}
+
+/* --- Forms & Buttons --- */
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea {
+    background-color: var(--input-bg);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+
+.dark-mode .btn-outline,
+.dark-mode .btn-icon {
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+.dark-mode .btn-outline:hover,
+.dark-mode .btn-icon:hover {
+    background-color: var(--input-bg);
+}
+
+/* --- Specifics & Dividers --- */
+.dark-mode .header {
+    border-bottom-color: var(--border);
+}
+
+.dark-mode .transaction-item {
+    border-bottom-color: var(--border);
+}
+
+.dark-mode .dropdown-divider {
+    background-color: var(--border);
 }
 
 /*
@@ -1085,69 +1078,78 @@ body.dark-mode .chart-container {
 
 /*
 ================================================================
-IMPROVED STYLES for Add Transaction Modal (Centered & Aesthetic)
+FINAL MODAL STYLES (Centered & Aesthetic)
 ================================================================
 */
 
 /* --- Modal Container --- */
 .modal {
-    position: center; /* Cover the whole screen */
-    inset: 0; /* Equivalent to top: 0; right: 0; bottom: 0; left: 0; */
-    z-index: 1000; /* Ensure it's on top */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
 
-    /* --- Centering using Flexbox --- */
+    /* Centering */
     display: flex;
-    align-items: flex-start; /* Vertically center */
-    justify-content: center; /* Horizontally center */
-    /* --- End Centering --- */
+    align-items: center;
+    justify-content: center;
 
-    padding: 20px; /* Space from screen edges on small devices */
-
-    /* --- Visibility & Animation --- */
     opacity: 0;
     visibility: hidden;
-    pointer-events: none; /* Ignore clicks when hidden */
-    /* Smooth fade-in/out */
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
 }
 
-/* --- Modal Background Overlay --- */
-.modal-overlay {
-    position: center;
-    inset: 0;
-    background-color: rgba(17, 24, 39, 0.6); /* Slightly transparent dark background */
-    -webkit-backdrop-filter: blur(4px); /* Optional: blur background */
-    backdrop-filter: blur(4px); /* Optional: blur background */
-    cursor: pointer;
+/* Active state */
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
 }
-/* Dark mode overlay */
+
+/* --- Overlay --- */
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(17, 24, 39, 0.6);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+    z-index: 1000;
+}
 body.dark-mode .modal-overlay {
     background-color: rgba(0, 0, 0, 0.7);
 }
 
-
-/* --- Modal Content Box --- */
 .modal-content {
-    position: center; /* Keep on top of overlay */
+    position: relative;
+    z-index: 1001;
     background-color: var(--card-bg);
-    border-radius: 12px; /* Consistent rounded corners */
-    padding: 24px 28px; /* Slightly adjusted padding */
-    width: 100%; /* Responsive width */
-    max-width: 460px; /* Control maximum size */
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* Refined shadow */
-    z-index: 1001; /* Above overlay */
-
-    /* Animation: Subtle scale-up entrance */
+    border-radius: 12px;
+    padding: 24px 28px;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     transform: scale(0.95) translateY(10px);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s ease;
 }
+.modal.active .modal-content {
+    transform: scale(1) translateY(0);
+}
+
 
 /* --- Styles when Modal is Active --- */
 .modal.active {
     opacity: 1;
     visibility: visible;
-    pointer-events: auto; /* Allow interaction */
-    transition-delay: 0s; /* Ensure visibility transition is immediate on show */
+    pointer-events: auto;
+    transition-delay: 0s;
 }
 
 .modal.active .modal-content {
@@ -1159,7 +1161,7 @@ body.dark-mode .modal-overlay {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px; /* Reduced margin */
+    margin-bottom: 20px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
 }
@@ -1167,34 +1169,34 @@ body.dark-mode .modal-overlay {
     font-size: 1.25rem; /* 20px */
     font-weight: 600;
     font-family: var(--font-display);
-    color: var(--text-primary);
+    color: #000000;
 }
 .btn-close-modal {
-    color: var(--text-secondary);
-    padding: 4px; /* Slightly smaller padding */
+    color: #000000;
+    padding: 4px;
 }
 .btn-close-modal:hover {
     color: var(--text-primary);
     background-color: var(--input-bg);
 }
 .btn-close-modal .icon {
-    width: 20px; /* Smaller close icon */
+    width: 20px;
     height: 20px;
 }
 
 
 /* --- Modal Form Elements --- */
 #transactionForm .form-group {
-    margin-bottom: 16px; /* Reduced spacing */
+    margin-bottom: 16px;
 }
 #transactionForm label {
-    font-size: 0.8rem; /* Smaller labels */
+    font-size: 0.8rem;
     margin-bottom: 4px;
 }
 #transactionForm input,
 #transactionForm select,
 #transactionForm textarea {
-    padding: 10px 12px; /* Slightly smaller inputs */
+    padding: 10px 12px;
     font-size: 0.95rem;
 }
 
@@ -1204,18 +1206,18 @@ body.dark-mode .modal-overlay {
     border: 1px solid var(--border);
     border-radius: 8px;
     overflow: hidden;
-    margin-bottom: 16px; /* Add margin below toggle */
+    margin-bottom: 16px;
 }
 .btn-toggle {
     flex: 1;
     padding: 10px;
     border: none;
     background-color: var(--input-bg);
-    color: var(--text-secondary);
+    color: #000000;
     font-weight: 500;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.2s ease;
     text-align: center;
 }
 .btn-toggle:first-child { border-radius: 7px 0 0 7px; }
@@ -1241,7 +1243,7 @@ body.dark-mode .btn-toggle.active { background-color: var(--primary); color: var
 .modal-footer .btn-outline {
     color: var(--text-secondary);
     border-color: var(--border);
-    padding: 8px 14px; /* Slightly smaller buttons */
+    padding: 8px 14px;
 }
 .modal-footer .btn-outline:hover {
     color: var(--text-primary);
@@ -1249,83 +1251,14 @@ body.dark-mode .btn-toggle.active { background-color: var(--primary); color: var
     background-color: var(--input-bg);
 }
 .modal-footer .btn-primary {
-    padding: 8px 14px; /* Slightly smaller buttons */
+    padding: 8px 14px;
 }
 
 /* --- Focus Rings --- */
 .modal-content input:focus,
 .modal-content select:focus,
 .modal-content textarea:focus {
-     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3); /* Softer primary focus ring */
+     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
      border-color: var(--primary);
 }
-
-/*
-================================================================
-MINIMAL & ROBUST STYLES for Modal Centering & Visibility
-================================================================
-*/
-
-/* ... Keep all existing CSS above this ... */
-
-/* Find the existing .modal rule and replace it with this */
-.modal {
-    position: fixed; /* Keep it fixed relative to the viewport */
-    inset: 0;        /* Make it cover the entire screen */
-    z-index: 1000;   /* Ensure it's on top of other content */
-
-    /* --- THESE ARE THE KEY CENTERING RULES --- */
-    display: flex;           /* Enable Flexbox */
-    align-items: center;     /* Vertically center the .modal-content */
-    justify-content: center; /* Horizontally center the .modal-content */
-    /* --- End Centering Rules --- */
-
-    padding: 20px; /* Add padding around the edges on small screens */
-
-    /* Keep the visibility/transition rules you already have */
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
-}
-
-/* Ensure the .modal-overlay covers the area */
-.modal-overlay {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
-    cursor: pointer;
-}
-
-/* Ensure .modal-content is positioned correctly within the flex container */
-.modal-content {
-    position: relative; /* Needed so z-index works */
-    z-index: 1001; /* Place content above the overlay */
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 24px 32px;
-    width: 100%;
-    max-width: 500px; /* Limit width */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-
-    /* Keep the animation/visibility rules */
-    transform: scale(0.95) translateY(10px);
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    opacity: 0;
-}
-
-/* Keep the .modal.active rules as they are */
-.modal.active {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transition: opacity 0.3s ease, visibility 0s linear 0s;
-}
-
-.modal.active .modal-content {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-}
-
-/* ... Keep all other existing CSS below this ... */
 

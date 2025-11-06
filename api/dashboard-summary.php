@@ -60,12 +60,42 @@ try {
     $stmt_bar->execute();
     $bar_chart_data = $stmt_bar->fetchAll(PDO::FETCH_ASSOC);
 
-    // Combine all data into one response
+    // 5. Get Savings Goal & Saved Amount
+    // Fetch user's saved goal from budget_settings (if exists)
+    $sql_budget = "
+        SELECT monthly_budget, savings_goal, currency
+        FROM budget_settings
+        WHERE user_id = :user_id
+        LIMIT 1
+    ";
+    $stmt_budget = $pdo->prepare($sql_budget);
+    $stmt_budget->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_budget->execute();
+    $budget = $stmt_budget->fetch(PDO::FETCH_ASSOC);
+
+    // Compute saved amount: sum of transactions categorized as 'Savings' (case-insensitive)
+    $sql_saved = "
+        SELECT COALESCE(SUM(amount), 0) AS savings_amount
+        FROM transactions
+        WHERE user_id = :user_id AND LOWER(category) = 'savings'
+    ";
+    $stmt_saved = $pdo->prepare($sql_saved);
+    $stmt_saved->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_saved->execute();
+    $saved_row = $stmt_saved->fetch(PDO::FETCH_ASSOC);
+    $savings_amount = $saved_row ? floatval($saved_row['savings_amount']) : 0.00;
+
+    // Combine all data into one response (include savings)
     $dashboard_data = [
         'summary' => $summary,
         'expense_breakdown' => $expense_breakdown,
         'recent_transactions' => $recent_transactions,
-        'bar_chart_data' => $bar_chart_data
+        'bar_chart_data' => $bar_chart_data,
+        'savings' => [
+            'goal' => isset($budget['savings_goal']) ? floatval($budget['savings_goal']) : null,
+            'saved' => $savings_amount,
+            'currency' => isset($budget['currency']) ? $budget['currency'] : 'USD'
+        ]
     ];
     
     // Get user info from auth-check.php
